@@ -12,8 +12,6 @@ displayed picture to compensate for the foibles of c. 1980's analogue TV transmi
 * Set the Pi up to auto-boot into displaying the browser in 'fullscreen' mode, displaying the web
 page of interest. The Pi is also configured to auto-reboot in the early hours of each morning.
 
-The URL will be of the for http://smartcambridge.org/smartpanel/<display_id>
-
 ## Step 1. Get the Pi/TV combo to display an un-adjusted 1920x1080 image.
 
 The first time you see the Pi display to the TV, unless you are very lucky the TV picture will
