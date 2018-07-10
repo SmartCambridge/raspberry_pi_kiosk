@@ -80,6 +80,9 @@ input to "PC".
 'Entertainment'.
 3. In 'Settings'..'Picture'..'Picture Size' choose 16:9. Another option may be 'Fit Picture' which works,
 but may be grayed-out as a result of using option 1 above (which is generally a good sign).
+4. Note the TV remote (e.g. Hitachi) may **also** have a dedicated button that sets the screen format,
+from widescreen, to PC, to 3:4 or whatever. So give that a prod.  This may only work until the next
+power-off of the TV though...
 
 ### Turn off TV power-saving modes
 
@@ -106,35 +109,39 @@ sudo apt install xscreensaver
 ```
 Launch screensaver on desktop and select option to DISABLE screen saving
 
+### Copy run.sh and settime.sh into the /home/pi directory
+
+Make sure the run.sh and settime.sh scripts are executable, if necessary with:
+```
+chmod +x run.sh
+chmod +x settime.sh
+```
+
+The ```settime.sh``` command will repeatedly attempt to retrieve a (non-existent) page from
+the smartcambridge.org web server (you can test it on the command line). The advantage is
+
+1. The ```settime.sh``` script won't exit until it has successfully connected to smartcambridge.org, so delaying
+the launch of the web browser until the network is known to be ok, and
+2. The ```settime.sh``` script picks up the *time* from smartcambridge.org and uses that to initialize
+the Raspberry Pi clock. The Pi has no battery to back up its system clock and this can lead to
+a variety of perverse system behaviour due to it believing a random date or time.
+
+The run.sh script contains commands to set the time on the Pi via settime.sh, and then runs the
+chromium browser with the command:
+
+```
+@chromium-browser --noerrdialogs --incognito --kiosk http://smartcambridge.org/smartpanel/display/<display_id> &
+```
+
+Note if you want to change the scale of the displayed web page, you can add an additional startup
+flag to chromium-browser e.g. to double the scale of the displayed page: ```--force-device-scale-factor 2```
+
 ### Add autostart rules to avoid screensaving and launch browser
 ```
 sudo nano ~/.config/lxsession/LXDE-pi/autostart
 ```
 
-Add comment to `screensaver` launch command
-```
-#@screensaver -no-splash
-```
-Add additional 'no screensaving' commands
-```
-@xset s off
-@xset -dpms
-@xset s noblank
-```
-Add command to persude Chrome it had a clean exit and re-launch cromium-browser. The 'sed' command
-and the --incognito switch to chromium-browser are both designed to prevent the browser launching with
-an unhelpful 'user message' which then prevents normal startup, particularly the 'Chrome closed unexpectedly,
-would you like to re-open old tabs'.
-
-Note if you want to change the scale of the displayed web page, you can add an additional startup
-flag to chromium-browser e.g. to double the scale of the displayed page: ```--force-device-scale-factor 2```
-
-```
-@sed -i 's/"exited_cleanly":false/"exited_cleanly":true/' ~/.config/chromium/Default/Preferences
-
-@chromium-browser --noerrdialogs --incognito --kiosk http://smartcambridge.org/smartpanel/display/<display_id>
-```
-So total changes to ```~/.config/lxsession/LXDE-pi/autostart``` are
+You should end up with these commands in the file, in addition to whatever your latest version of Raspbian put in there.
 
 ```
 #@screensaver -no-splash
@@ -142,9 +149,7 @@ So total changes to ```~/.config/lxsession/LXDE-pi/autostart``` are
 @xset -dpms
 @xset s noblank
 
-@sed -i 's/"exited_cleanly":false/"exited_cleanly":true/' ~/.config/chromium/Default/Preferences
-
-@chromium-browser --noerrdialogs --incognito --kiosk http://smartcambridge.org/smartpanel/<display_id>
+@/home/pi/run.sh
 ```
 
 ### Miscellaneous raspi-config settings
@@ -157,15 +162,17 @@ Set boot behaviour to 'desktop' (not tty)
 
 In localization options set appropriate language, timezone and WiFi country.
 
-## Create a cron job to reboot the screen every morning
+## Create a cron job to reboot the screen every morning, and regularly update the time
 
-e.g. at 06:27 am
+e.g. restart every day at 06:27 am
 
-Don't forget the 'sudo' to ensure 'root' crontab, not pi user...
+Don't forget the '**sudo** crontab -e' to ensure 'root' crontab, not pi user...
 ```
 sudo crontab -e
 ```
 ```
 27 06 * * * /sbin/shutdown -r now
+
+*/9 * * * * /home/pi/settime.sh
 ```
 
