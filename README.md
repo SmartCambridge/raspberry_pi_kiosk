@@ -1,4 +1,4 @@
-# Raspberry Pi 'Kiosk' configuration
+# Raspberry Pi Kiosk configuration
 
 ## Overview
 
