@@ -88,7 +88,7 @@ involves a bit of trial-and-error. Any of these suggestions below might work.
 
 ### Set Pi desktop image to a 1920x1080 test image
 
-Unless you chose something else, our test background image is at `/home/pi/1920x1080_test.jpg`.
+Unless you chose something else, our test background image is at `/home/pi/raspberry_pi_kiosk/1920x1080_test.jpg`.
 
 Below you can see the full image scaled to fit your window, so note it has an alternating black-and-white border.
 This border is likely to disappear off the edge of your TV until you correct various display settings in both the Pi
@@ -216,8 +216,8 @@ chmod +x settime.sh
 ```
 
 The `settime.sh` command will repeatedly attempt to retrieve a page from
-the smartcambridge.org web server and use the returned server timestamp to set the Pi
-clock.
+the smartcambridge.org web server (feel free to edit the file to use any other web server) 
+and use the returned server timestamp to set the Pi clock.
 
 Test settime.sh manually on the command line with:
 ```
