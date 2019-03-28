@@ -270,6 +270,17 @@ You should end up with these commands in the file, in addition to whatever your 
 
 @/home/pi/run.sh
 ```
+### Portrait mode
+
+Edit `/boot/config.txt` (e.g. `sudo nano /boot/config.txt`).
+
+Add line:
+```
+# smartpanel Portrait mode
+display_rotate=1
+```
+Note this will rotate the display 90 degrees (i.e. clockwise).  If this is the 'wrong' way for your your actual monitor
+then use `display_rotate=3` which will rotate 270 degrees.
 
 ### Miscellaneous raspi-config settings
 
