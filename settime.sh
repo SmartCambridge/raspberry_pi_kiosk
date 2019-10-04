@@ -36,8 +36,9 @@ TIMEGET=$(date +%s%N)
 
 LOOPCOUNT=0
 LOOPEXIT="f"
+SLEEPTIME=20
 
-while ((LOOPCOUNT < 10))  && [[ $LOOPEXIT == "f" ]]; do
+while ((LOOPCOUNT < 30))  && [[ $LOOPEXIT == "f" ]]; do
     # get the headers from the website, including 'date:'
     CURLRETURN=$(curl --head -s $TIMEURL)
     # capture the curl command exit value, 0 means GET OK, 6 or 7 means no network
@@ -49,14 +50,17 @@ while ((LOOPCOUNT < 10))  && [[ $LOOPEXIT == "f" ]]; do
     # echo "curl exit $CURLEXIT so LOOPEXIT is $LOOPEXIT"
     if [[ $LOOPEXIT == "f" ]]; then
         LOOPCOUNT=$((LOOPCOUNT + 1))
-        echo "Attempt $LOOPCOUNT. Curl failed to get time, sleeping 10 seconds and retrying..."
-        sleep 10
+        if (( LOOPCOUNT == 10 )) || (( LOOPCOUNT == 20 )); then
+            SLEEPTIME=$(( SLEEPTIME * 10 ))
+        fi
+        echo "$(date) Attempt $LOOPCOUNT. Curl failed to get time, sleeping $SLEEPTIME seconds and retrying..."
+        sleep $SLEEPTIME
     fi
 done
 
 # Anything other than a zero exit value from curl and we quit here
 if (( CURLEXIT != 0 )); then
-    echo "Failed to get time"
+    echo "$(date) settime.sh Failed to get time, aborting"
     exit
 fi
 
@@ -69,11 +73,11 @@ TIMEGOT=$(date +%s%N)
 NETTIME=$(( (TIMEGOT - TIMEGET) / 1000000 ))
 
 if [[ "$TEST" == "t" ]]; then
-    echo "NOW = $NOW"
-    echo "Retrieved in $NETTIME ms"
+    echo "$(date) NOW = $NOW"
+    echo "$(date) Retrieved in $NETTIME ms"
     exit 0
 else
-    echo "Setting date..."
+    echo "$(date) Setting date..."
     sudo date -s "$NOW"
 fi
 
