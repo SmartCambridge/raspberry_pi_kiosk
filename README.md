@@ -1,5 +1,47 @@
 # Raspberry Pi Kiosk configuration
 
+# Install instructions for Pi OS "bookworm" (2023)
+
+Correct the user 'ijl20' in `crontab`, `run.sh` and `.config/wayfire.sh` as needed.
+```
+mkdir src
+cd src
+git clone https://github.com/SmartCambridge/raspberry_pi_kiosk
+cp raspberry_pi_kiosk/settime.sh ~
+cp raspberry_pi_kiosk/run_firefox.sh ~/run.sh
+cd ~
+sudo apt install vim
+```
+
+Edit run.sh to fix the home directory names and the web address to be loaded.
+
+Create crontab entries for SUDO user:
+```
+sudo crontab -e
+```
+To reboot early every morning (here 05:09) , and sync clock via http, add:
+```
+09 05 * * *  /usr/sbin/shutdown -r now
+
+*/13 * * * * /home/ijl20/settime.sh
+```
+
+`settime.sh` is a simple script that 'get's a web page and syncs the clock to the time found in the response header. This is
+accurate enough for the browser to function properly without needing the network to route anything other than http/https.
+
+Have the browser launch your web page in 'kiosk' mode on startup (after GUI has loaded):
+```
+vim .config/wayfire.ini
+```
+Add:
+```
+[autostart]
+test = touch /home/ijl20/boot_timestamp
+smartpanel = /home/ijl20/run.sh
+```
+
+# General instructions
+
 This development assumes the use of a Raspberry Pi, a superb platform that emerged from the University of Cambridge. This
 guide is actually a side-effect of the Cambridge SmartPanel development, also from the University of Cambridge.
 
