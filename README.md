@@ -13,7 +13,7 @@ cd ~
 sudo apt install vim
 ```
 
-See further notes on firefox at https://github.com/SmartCambridge/raspberry_pi_kiosk/firefox
+See further notes on firefox at in the [firefox/README.md](https://github.com/SmartCambridge/raspberry_pi_kiosk/blob/master/firefox/README.md)
 
 Edit run.sh to fix the home directory names and the web address to be loaded.
 
