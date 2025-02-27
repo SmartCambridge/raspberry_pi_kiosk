@@ -13,6 +13,8 @@ cd ~
 sudo apt install vim
 ```
 
+See further notes on firefox at https://github.com/SmartCambridge/raspberry_pi_kiosk/firefox
+
 Edit run.sh to fix the home directory names and the web address to be loaded.
 
 Create crontab entries for SUDO user:
@@ -54,8 +56,8 @@ start with a working Pi with the Raspbian OS installed, you've worked out the ma
 Ctrl-Alt-T to open a 'command terminal' window and you know how to edit files (at least with 'nano'). If you really are
 a Pi noob, see [here](https://www.raspberrypi.org/documentation/installation/noobs.md).
 
-This guide, originally written for the 
-[Cambridge SmartPanel](https://smartcambridge.org/csn/forum/forum/smartpanel-3/topic/about-the-cambridge-smartpanel-34/), 
+This guide, originally written for the
+[Cambridge SmartPanel](https://smartcambridge.org/csn/forum/forum/smartpanel-3/topic/about-the-cambridge-smartpanel-34/),
 assumes the ultimate objective is to 'boot' the Pi and launch chromium-browser to display a web page.
 _All_ the smarts in the display are provided by the javascript over the web, so dependencies on the kiosk
 implementation are absolutely at a minimum. Essentially we need the kiosk to:
@@ -107,12 +109,12 @@ about to become your Pi desktop background image...
 
 ## Overview
 
-The idea is to use a Raspberry Pi to boot and auto-display the browser accessing the 
+The idea is to use a Raspberry Pi to boot and auto-display the browser accessing the
 pre-coded URL for the SmartPanel.
 
 There are two main steps:
 * Configure the Pi and the TV to display an image at the right resolution, i.e. 1920x1080. This is
-slightly harder than it sounds as TV manufacturers make an art form of auto-adjusting the 
+slightly harder than it sounds as TV manufacturers make an art form of auto-adjusting the
 displayed picture to compensate for the foibles of c. 1980's analogue TV transmissions.
 * Set the Pi up to auto-boot into displaying the browser in 'fullscreen' mode, displaying the web
 page of interest. The Pi is also configured to auto-reboot in the early hours of each morning.
@@ -138,11 +140,11 @@ and the TV.
 
 ![TV test image](1920x1080_test.jpg "Test TV image")
 
-Set it as the Pi desktop image by right-clicking the desktop and choosing 
+Set it as the Pi desktop image by right-clicking the desktop and choosing
 'Desktop Preferences' then on the first tab ('Desktop') set
-the 'Layout' to 'Center Image on Screen' and for 'Picture' choose the downloaded image. 
-It is *essential* you use the 
-Layout option 'Center image on screen' to place the test image in the center of the screen without scaling 
+the 'Layout' to 'Center Image on Screen' and for 'Picture' choose the downloaded image.
+It is *essential* you use the
+Layout option 'Center image on screen' to place the test image in the center of the screen without scaling
 (the point is to get an *unscaled* image to check the TV resolution...).
 
 ### Set the Pi screen resolution to 1920x1080
@@ -258,7 +260,7 @@ chmod +x settime.sh
 ```
 
 The `settime.sh` command will repeatedly attempt to retrieve a page from
-the smartcambridge.org web server (feel free to edit the file to use any other web server) 
+the smartcambridge.org web server (feel free to edit the file to use any other web server)
 and use the returned server timestamp to set the Pi clock.
 
 Test settime.sh manually on the command line with:
@@ -368,7 +370,7 @@ In a terminal window, type `shutdown -r now` and the Pi will reboot, loading you
 In 'kiosk-mode' displaying a web page, note the browser will not respond to 'exit' keys.
 To access the Pi you should Ctrl-Alt-T to a command window, and type the command `killall chromium-browser`.
 
-If your web page does *not* load, 
+If your web page does *not* load,
 
 1. first check `/home/pi/run.log` and look for clues there.
 2. try `./run.sh` on the command line, it should launch the browser
